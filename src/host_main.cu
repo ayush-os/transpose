@@ -103,7 +103,7 @@ int main() {
       "output copy D->H");
 
   const int TEST_ROW_A = 1234;
-  const int TEST_COL_A = 5678;
+  const int TEST_COL_A = 4032;
 
   const int index_A = TEST_ROW_A * MATRIX_DIM + TEST_COL_A;
 
