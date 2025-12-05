@@ -15,11 +15,11 @@ __global__ void baseline_matrix_transpose_kernel(float *output,
   int oldSpot = threadIdX + N * threadIdY;
   int newSpot = threadIdY + N * threadIdX;
 
-  // if (threadIdX <= 6 && threadIdY <= 6) {
-  //   printf("===============threadIdX: %d, threadIdY: "
-  //          "%d===============\noldSpot: %d\nnewSpot: %d\n===============\n",
-  //          threadIdX, threadIdY, oldSpot, newSpot);
-  // }
+  if (blockIdx.x == 0 && blockIdx.y == 0) {
+    printf("===============threadIdX: %d, threadIdY: "
+           "%d===============\noldSpot: %d\nnewSpot: %d\n===============\n",
+           threadIdX, threadIdY, oldSpot, newSpot);
+  }
 
   // output[newSpot] = input[oldSpot];
   output[oldSpot] = input[newSpot];
