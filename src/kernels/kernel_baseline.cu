@@ -6,6 +6,8 @@
 __global__ void baseline_matrix_transpose_kernel(float *output,
                                                  const float *input, int N) {
 
+  __shared__ float block[256];
+
   int threadIdX = blockDim.x * blockIdx.x + threadIdx.x;
   int threadIdY = blockDim.y * blockIdx.y + threadIdx.y;
 
@@ -15,12 +17,8 @@ __global__ void baseline_matrix_transpose_kernel(float *output,
   int oldSpot = threadIdX + N * threadIdY;
   int newSpot = threadIdY + N * threadIdX;
 
-  if (blockIdx.x == 0 && blockIdx.y == 0) {
-    printf("===============threadIdX: %d, threadIdY: "
-           "%d===============\noldSpot: %d\nnewSpot: %d\n===============\n",
-           threadIdX, threadIdY, oldSpot, newSpot);
-  }
+  block[threadIdx.x + threadIdx.y * 16] = input[oldSpot];
 
-  // output[newSpot] = input[oldSpot];
-  output[oldSpot] = input[newSpot];
+  output[newSpot] = block[threadIdx.x + threadIdx.y * 16];
+  // output[oldSpot] = input[newSpot];
 }
