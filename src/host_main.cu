@@ -21,8 +21,8 @@ int main() {
   const int N_TOTAL = MATRIX_DIM * MATRIX_DIM; // Total elements: 16,777,216
   const size_t bytes = N_TOTAL * sizeof(float);
 
-  const int WARMUP_RUNS = 0;
-  const int TIMING_RUNS = 1;
+  const int WARMUP_RUNS = 10;
+  const int TIMING_RUNS = 1000;
 
   std::cout << "--- Matrix Transpose Stable Timing Test (N x N) ---"
             << std::endl;
