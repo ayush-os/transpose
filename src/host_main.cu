@@ -116,7 +116,7 @@ int main() {
     std::cout << "  A[" << TEST_ROW_A << "][" << TEST_COL_A << "] ("
               << expected_value << ")"
               << " correctly moved to B[" << TEST_COL_A << "][" << TEST_ROW_A
-              << "]" << std::endl;
+              << "] (" << h_output[index_B] << ")" << std::endl;
   } else {
     std::cout << "\nVerification Check: **FAILED**" << std::endl;
     std::cout << "  Expected B[" << TEST_COL_A << "][" << TEST_ROW_A
