@@ -20,3 +20,13 @@ each reads 2 floats * 16,777,216 elems * 4 bytes/float = 134,217,728 bytes read
 134,217,728 bytes / 0.000161143 s = 832,910,694,228.107953805 B/s ~ 833Billion B/s
 
 which is 833billion /  1.55 TB about 0.5374193548 ~ 53.7% bandwidth utilization
+
+optimization 1: global memory coalescing on writes as opposed to on reads
+
+if you coalesce on writes then its better than coalescing on reads cuz of cache write-back which is more expensive than just L2 cache reads in the case of reads
+
+this took my kernel from 161.143 us to 143.597 us, which is an 11% decrease! No small amount
+
+this also increased bandwidth utilization to 134,217,728 bytes / 0.000143597 = 934,683,370,822.5102195728 B/s ~ 934.68 B/s
+
+which is 934.68 bill / 1.55 trill = 0.6030193548 => 60.3% utilization which is a 12.3% increase in bandwidth utilization
