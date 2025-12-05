@@ -5,4 +5,14 @@
 __global__ void baseline_matrix_transpose_kernel(float *output,
                                                  const float *input, int N) {
 
+  int threadIdX = blockDim.x * blockIdx.x + threadIdx.x;
+  int threadIdY = blockDim.y * blockIdx.y + threadIdx.y;
+
+  if (threadIdX >= N || threadIdY >= N)
+    return;
+
+  int oldSpot = threadIdX + N * threadIdY;
+  int newSpot = threadIdY + N * threadIdX;
+
+  output[newSpot] = input[oldSpot];
 }
