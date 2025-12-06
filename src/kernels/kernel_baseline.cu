@@ -30,7 +30,7 @@ __global__ void baseline_transpose_kernel(float *output, const float *input) {
 // --- Shared memory optimized kernel
 
 __global__ void smem_transpose_kernel(float *output, const float *input) {
-  __shared__ float tile[TILE_DIM][TILE_DIM+1];
+  __shared__ float tile[TILE_DIM][64+1];
 
   int x = TILE_DIM * blockIdx.x + threadIdx.x;
   int y = TILE_DIM * blockIdx.y + threadIdx.y;
@@ -46,7 +46,7 @@ __global__ void smem_transpose_kernel(float *output, const float *input) {
   y = TILE_DIM * blockIdx.x + threadIdx.y;
 
   #pragma unroll
-  for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
+  for (int j = 0; j < 64; j += BLOCK_ROWS)
     output[(y + j) * width + x] = tile[threadIdx.x][threadIdx.y + j];
 }
 
