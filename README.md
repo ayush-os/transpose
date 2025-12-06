@@ -1,5 +1,7 @@
 # transpose
 
+my follow along of https://developer.nvidia.com/blog/efficient-matrix-transpose-cuda-cc/
+
 (main) root@C.28510276:/workspace/transpose/build$ ./bin/transpose 
 --- Matrix Transpose Stable Timing Test (N x N) ---
 Matrix Dimension N: 4096 x 4096
@@ -30,3 +32,7 @@ this took my kernel from 161.143 us to 143.597 us, which is an 11% decrease! No 
 this also increased bandwidth utilization to 134,217,728 bytes / 0.000143597 = 934,683,370,822.5102195728 B/s ~ 934.68 B/s
 
 which is 934.68 bill / 1.55 trill = 0.6030193548 => 60.3% utilization which is a 12.3% increase in bandwidth utilization
+
+simple matrix copy ran in 66 us which is 
+2 * 4 * 16,777,216 = 134,217,728 bytes / 6.6e-5 ~ 2.033 trillion bytes / second (high L2 cache reads which is why its greater than a100 theoretical maximum)
+

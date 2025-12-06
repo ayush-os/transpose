@@ -4,31 +4,27 @@ const int TILE_DIM = 32;
 const int BLOCK_ROWS = 8;
 
 __global__ void baseline_copy_kernel(float *output, const float *input) {
-
-  int x = blockDim.x * blockIdx.x + threadIdx.x;
-  int y = blockDim.y * blockIdx.y + threadIdx.y;
+  int x = TILE_DIM * blockIdx.x + threadIdx.x;
+  int y = TILE_DIM * blockIdx.y + threadIdx.y;
   int width = gridDim.x * TILE_DIM;
 
-  for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
-    output[(y + j) * width + x] = input[(y + j) * width + x];
+  for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS) {
+    int index = (y + j) * width + x;
+    output[index] = input[index];
+  }
 }
 
 // --- Baseline Kernel (Naive, Unoptimized) --- 161 us ---
 // it inherently coalesces reads but not writes
 
-__global__ void baseline_matrix_transpose_kernel(float *output,
-                                                 const float *input, int N) {
+__global__ void baseline_transpose_kernel(float *output, const float *input) {
 
-  int threadIdX = blockDim.x * blockIdx.x + threadIdx.x;
-  int threadIdY = blockDim.y * blockIdx.y + threadIdx.y;
+  int x = TILE_DIM * blockIdx.x + threadIdx.x;
+  int y = TILE_DIM * blockIdx.y + threadIdx.y;
+  int width = gridDim.x * TILE_DIM;
 
-  if (threadIdX >= N || threadIdY >= N)
-    return;
-
-  int oldSpot = threadIdX + N * threadIdY;
-  int newSpot = threadIdY + N * threadIdX;
-
-  output[newSpot] = input[oldSpot];
+  for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
+    output[x*width + (y+j)] = input[(y+j)*width + x];
 }
 
 // --- Write Coalesced Kernel --- 143 us ---
