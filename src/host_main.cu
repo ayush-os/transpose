@@ -50,7 +50,7 @@ int main() {
 
   const int THREADS_X = 16;
   const int THREADS_Y = 16;
-  dim3 threadsPerBlock(16, 8, 1);
+  dim3 threadsPerBlock(32, 8, 1);
   dim3 numBlocks(MATRIX_DIM / 32, MATRIX_DIM / 32);
 
   std::cout << "Grid: " << numBlocks.x << "x" << numBlocks.y << " blocks, "
