@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 
-__global__ void baseline_matrix_transpose_kernel(float *output,
-                                                 const float *input, int N);
+__global__ void baseline_copy_kernel(float *output,
+                                                 const float *input);
 
 void checkCudaError(cudaError_t err, const char *msg) {
   if (err != cudaSuccess) {
@@ -48,9 +48,8 @@ int main() {
 
   const int THREADS_X = 16;
   const int THREADS_Y = 16;
-  dim3 threadsPerBlock(THREADS_X, THREADS_Y);
-  dim3 numBlocks((MATRIX_DIM + THREADS_X - 1) / THREADS_X,
-                 (MATRIX_DIM + THREADS_Y - 1) / THREADS_Y);
+  dim3 threadsPerBlock(32, 8, 1);
+  dim3 numBlocks(MATRIX_DIM / 32, MATRIX_DIM / 32);
 
   std::cout << "Grid: " << numBlocks.x << "x" << numBlocks.y << " blocks, "
             << threadsPerBlock.x << "x" << threadsPerBlock.y
@@ -63,8 +62,8 @@ int main() {
   std::cout << "Warming up the GPU and Caches (" << WARMUP_RUNS << " runs)..."
             << std::endl;
   for (int i = 0; i < WARMUP_RUNS; ++i) {
-    baseline_matrix_transpose_kernel<<<numBlocks, threadsPerBlock>>>(
-        d_output, d_input, MATRIX_DIM);
+    baseline_copy_kernel<<<numBlocks, threadsPerBlock>>>(
+        d_output, d_input);
   }
   cudaDeviceSynchronize();
   checkCudaError(cudaGetLastError(), "warm-up kernel launch");
@@ -78,8 +77,8 @@ int main() {
     cudaEventRecord(start);
 
     // Kernel launch
-    baseline_matrix_transpose_kernel<<<numBlocks, threadsPerBlock>>>(
-        d_output, d_input, MATRIX_DIM);
+    baseline_copy_kernel<<<numBlocks, threadsPerBlock>>>(
+        d_output, d_input);
 
     cudaEventRecord(stop);
 
