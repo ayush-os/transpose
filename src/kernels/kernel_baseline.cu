@@ -36,6 +36,7 @@ __global__ void smem_transpose_kernel(float *output, const float *input) {
   int y = TILE_DIM * blockIdx.y + threadIdx.y;
   int width = gridDim.x * TILE_DIM;
 
+  #pragma unroll
   for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
     tile[threadIdx.y + j][threadIdx.x] = input[(y + j) * width + x];
 
@@ -44,6 +45,7 @@ __global__ void smem_transpose_kernel(float *output, const float *input) {
   x = TILE_DIM * blockIdx.y + threadIdx.x;
   y = TILE_DIM * blockIdx.x + threadIdx.y;
 
+  #pragma unroll
   for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
     output[(y + j) * width + x] = tile[threadIdx.x][threadIdx.y + j];
 }
