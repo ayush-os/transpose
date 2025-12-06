@@ -32,7 +32,9 @@ this took my kernel from 161.143 us to 143.597 us, which is an 11% decrease! No 
 this also increased bandwidth utilization to 134,217,728 bytes / 0.000143597 = 934,683,370,822.5102195728 B/s ~ 934.68 B/s
 
 which is 934.68 bill / 1.55 trill = 0.6030193548 => 60.3% utilization which is a 12.3% increase in bandwidth utilization
-
+--------
 simple matrix copy ran in 66 us which is 
 2 * 4 * 16,777,216 = 134,217,728 bytes / 6.6e-5 ~ 2.033 trillion bytes / second (high L2 cache reads which is why its greater than a100 theoretical maximum)
 
+naive matrix transpose ran in 686.513
+134,217,728 bytes / 0.000686513 ~ 195 billion bytes / second (20x lower bandwidth utilization than the simple matrix copy! crazy how much of a difference not coalescing writes makes)

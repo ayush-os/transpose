@@ -5,6 +5,7 @@
 
 __global__ void baseline_copy_kernel(float *output, const float *input);
 __global__ void baseline_transpose_kernel(float *output, const float *input);
+__global__ void smem_transpose_kernel(float *output, const float *input);
 
 void checkCudaError(cudaError_t err, const char *msg) {
   if (err != cudaSuccess) {
@@ -62,7 +63,7 @@ int main() {
   std::cout << "Warming up the GPU and Caches (" << WARMUP_RUNS << " runs)..."
             << std::endl;
   for (int i = 0; i < WARMUP_RUNS; ++i) {
-    baseline_transpose_kernel<<<numBlocks, threadsPerBlock>>>(d_output, d_input);
+    smem_transpose_kernel<<<numBlocks, threadsPerBlock>>>(d_output, d_input);
   }
   cudaDeviceSynchronize();
   checkCudaError(cudaGetLastError(), "warm-up kernel launch");
@@ -76,7 +77,7 @@ int main() {
     cudaEventRecord(start);
 
     // Kernel launch
-    baseline_transpose_kernel<<<numBlocks, threadsPerBlock>>>(d_output, d_input);
+    smem_transpose_kernel<<<numBlocks, threadsPerBlock>>>(d_output, d_input);
 
     cudaEventRecord(stop);
 
