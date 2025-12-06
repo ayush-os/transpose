@@ -47,3 +47,21 @@ __global__ void smem_transpose_kernel(float *output, const float *input) {
   for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
     output[(y + j) * width + x] = tile[threadIdx.x][threadIdx.y + j];
 }
+
+__global__ void smem_copy_kernel(float *output, const float *input) {
+  __shared__ float tile[TILE_DIM * TILE_DIM];
+
+  int x = TILE_DIM * blockIdx.x + threadIdx.x;
+  int y = TILE_DIM * blockIdx.y + threadIdx.y;
+  int width = gridDim.x * TILE_DIM;
+
+  for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
+    tile[(threadIdx.y + j) * TILE_DIM + threadIdx.x] =
+        input[(y + j) * width + x];
+
+  __syncthreads();
+
+  for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS)
+    output[(y + j) * width + x] =
+        tile[(threadIdx.y + j) * TILE_DIM + threadIdx.x];
+}

@@ -38,3 +38,8 @@ simple matrix copy ran in 66 us which is
 
 naive matrix transpose ran in 686.513
 134,217,728 bytes / 0.000686513 ~ 195 billion bytes / second (20x lower bandwidth utilization than the simple matrix copy! crazy how much of a difference not coalescing writes makes)
+
+coalesced transpose via smem kernel ran in 180.476 us
+134,217,728 bytes / 0.000180476 ~ 743 billion bytes / second (3.8x better than naive)
+
+is there something intrinsic to shared memory/__syncthreads() that we can't get higher than this? the way to test that would be to do a similar smem kernel for copying
