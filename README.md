@@ -44,7 +44,10 @@ coalesced transpose via smem kernel ran in 180.476 us
 
 is there something intrinsic to shared memory/__syncthreads() that we can't get higher than this? the way to test that would be to do a similar smem kernel for copying
 
-smem copy kernel ran in 108 us
-134,217,728 bytes / 0.000108 = 1.2427567407 terrabytes per second
+smem copy kernel ran in 104.249 us
+134,217,728 bytes / 0.000104249 = 1.29 terrabytes per second
 
 so we need to solve the smem bank conflict in our kernel to improve things.
+
+final smem bank padded kernel ran in 108.857 us
+134,217,728 bytes / 0.000108857 = 1.23 terrabytes per second
